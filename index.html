@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caderneta Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F3F6;--card:#FFFFFF;--ink:#0F1F3D;--mut:#5B6678;--line:#D9DEE7;--acc:#F2B705;--on-acc:#0F1F3D;--in:#18794E;--out:#B42318;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1426;--card:#142039;--ink:#EEF2F8;--mut:#9AA6BA;--line:#27344F;--in:#4CC38A;--out:#FF8A80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1426;--card:#142039;--ink:#EEF2F8;--mut:#9AA6BA;--line:#27344F;--in:#4CC38A;--out:#FF8A80;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Sora',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0 16px}
+h1{font-size:22px;font-weight:800;margin:0;letter-spacing:-.01em}
+h2{font-size:16px;font-weight:600;margin:24px 0 8px}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--mut);white-space:nowrap}
+.pill.off{border-color:var(--acc);color:var(--ink)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--line);padding:4px;border-radius:12px;margin-bottom:16px}
+.tabs button{border:0;background:transparent;color:var(--mut);font:inherit;font-weight:600;padding:10px 4px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.seg button{font:inherit;font-weight:600;padding:12px 4px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--ink);background:var(--acc);color:var(--on-acc)}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:12px 0 4px}
+input{width:100%;font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+input.big{font-size:26px;font-weight:800}
+.btn{font:inherit;font-weight:800;border:0;border-radius:12px;padding:14px 16px;background:var(--ink);color:var(--card);cursor:pointer;width:100%;margin-top:16px}
+.btn.sm{width:auto;margin:0;padding:10px 14px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row small{display:block;color:var(--mut);font-size:12px}
+.amt{font-weight:800;white-space:nowrap}
+.amt.in{color:var(--in)}.amt.out{color:var(--out)}
+.link{background:none;border:0;color:var(--mut);font:inherit;font-size:12px;text-decoration:underline;cursor:pointer;padding:4px}
+.empty{color:var(--mut);text-align:center;padding:20px 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:20px;font-weight:800;margin-top:2px}
+.stat span{font-size:12px;color:var(--mut)}
+.score{display:flex;align-items:baseline;gap:8px}
+.score b{font-size:56px;font-weight:800;line-height:1}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:12px 0}
+.bar i{display:block;height:100%;background:var(--acc)}
+.fac{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);padding:3px 0}
+.inline{display:flex;gap:8px;margin-top:10px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+textarea{width:100%;height:120px;font:inherit;font-size:13px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);margin-top:10px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Caderneta Digital</h1>
+    <span class="pill" id="net">Ligado</span>
+  </header>
+  <nav class="tabs" role="tablist" aria-label="Secções">
+    <button role="tab" data-t="reg" aria-selected="true">Registar</button>
+    <button role="tab" data-t="div" aria-selected="false">Dívidas</button>
+    <button role="tab" data-t="res" aria-selected="false">Resumo</button>
+  </nav>
+
+  <section id="reg">
+    <div class="card">
+      <div class="seg" id="kind" role="group" aria-label="Tipo de registo">
+        <button data-k="venda" aria-pressed="true">Venda</button>
+        <button data-k="despesa" aria-pressed="false">Despesa</button>
+        <button data-k="fiado" aria-pressed="false">A crédito</button>
+      </div>
+      <label for="val">Valor (Kz)</label>
+      <input id="val" class="big" inputmode="numeric" autocomplete="off" placeholder="0">
+      <div id="cliBox" hidden>
+        <label for="cli">Nome do cliente</label>
+        <input id="cli" autocomplete="off" placeholder="Quem ficou a dever">
+      </div>
+      <label for="desc">Descrição (opcional)</label>
+      <input id="desc" autocomplete="off" placeholder="Ex.: 3 caixas de tomate">
+      <button class="btn" id="save">Guardar registo</button>
+    </div>
+    <h2>Últimos registos</h2>
+    <div class="card" id="list"></div>
+  </section>
+
+  <section id="div" hidden>
+    <div class="card" id="debts"></div>
+  </section>
+
+  <section id="res" hidden>
+    <div class="grid" id="stats"></div>
+    <h2>Perfil de actividade</h2>
+    <div class="card" id="prof"></div>
+    <h2>Dados</h2>
+    <div class="card">
+      <p style="margin:0 0 12px;color:var(--mut);font-size:13px">Os registos ficam guardados neste telemóvel e funcionam sem internet.</p>
+      <button class="btn sm ghost" id="wipe">Apagar todos os dados</button>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+var KEY='caderneta_v1',DAY=864e5,S=[],kind='venda',confirmWipe=false;
+function load(){try{var r=localStorage.getItem(KEY);return r?JSON.parse(r):[]}catch(e){return[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+S=load();
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function kz(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00A0')+' Kz'}
+function dt(ts){return new Date(ts).toLocaleDateString('pt-PT',{day:'numeric',month:'short'})}
+function dk(ts){var d=new Date(ts);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate()}
+function sum(a,f){return a.reduce(function(s,x){return s+(f(x)?x.v:0)},0)}
+function toast(m){var t=$('toast');t.textContent=m;t.className='toast on';setTimeout(function(){t.className='toast'},1800)}
+
+/* separadores */
+document.querySelectorAll('.tabs button').forEach(function(b){b.onclick=function(){
+  document.querySelectorAll('.tabs button').forEach(function(x){x.setAttribute('aria-selected',x===b)});
+  ['reg','div','res'].forEach(function(id){$(id).hidden=id!==b.dataset.t});
+  render();
+}});
+
+/* tipo de registo */
+document.querySelectorAll('#kind button').forEach(function(b){b.onclick=function(){
+  kind=b.dataset.k;
+  document.querySelectorAll('#kind button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+  $('cliBox').hidden=kind!=='fiado';
+}});
+
+/* guardar */
+$('save').onclick=function(){
+  var v=parseInt(($('val').value||'').replace(/\D/g,''),10);
+  if(!v){toast('Indique o valor');$('val').focus();return}
+  var c=$('cli').value.trim();
+  if(kind==='fiado'&&!c){toast('Indique o nome do cliente');$('cli').focus();return}
+  S.push({id:Date.now()+Math.random(),t:kind,v:v,d:$('desc').value.trim(),c:kind==='fiado'?c:'',ts:Date.now()});
+  save();$('val').value='';$('desc').value='';$('cli').value='';
+  toast('Registo guardado');render();
+};
+
+/* dívidas */
+function debts(){
+  var m={};
+  S.forEach(function(x){
+    if(x.t!=='fiado'&&x.t!=='recebimento')return;
+    var k=x.c.toLowerCase();
+    m[k]=m[k]||{n:x.c,b:0,last:0};
+    m[k].b+=x.t==='fiado'?x.v:-x.v;
+    m[k].last=Math.max(m[k].last,x.ts);
+  });
+  return Object.keys(m).map(function(k){return m[k]}).filter(function(d){return d.b>0}).sort(function(a,b){return b.b-a.b});
+}
+
+/* perfil */
+function profile(){
+  var now=Date.now(),r30=S.filter(function(x){return x.ts>=now-30*DAY});
+  var days=new Set(r30.map(function(x){return dk(x.ts)})).size;
+  var fiado=sum(S,function(x){return x.t==='fiado'}),rec=sum(S,function(x){return x.t==='recebimento'});
+  var ratio=fiado?Math.min(rec/fiado,1):1;
+  var saldo=sum(r30,function(x){return x.t==='venda'||x.t==='recebimento'})-sum(r30,function(x){return x.t==='despesa'});
+  var a=Math.min(days/20,1)*50,b=Math.min(S.length/40,1)*20,c=ratio*20,d=saldo>0?10:0;
+  var s=Math.round(a+b+c+d);
+  var lvl=s<25?'Inicial':s<50?'Em construção':s<75?'Consistente':'Forte';
+  return{s:s,lvl:lvl,days:days,n:S.length,ratio:ratio,saldo:saldo};
+}
+
+function render(){
+  /* registos */
+  var rec=S.slice().sort(function(a,b){return b.ts-a.ts}).slice(0,8);
+  $('list').innerHTML=rec.length?rec.map(function(x){
+    var out=x.t==='despesa',lbl={venda:'Venda',despesa:'Despesa',fiado:'A crédito',recebimento:'Recebimento'}[x.t];
+    return '<div class="row"><div>'+esc(lbl)+(x.c?' · '+esc(x.c):'')+'<small>'+dt(x.ts)+(x.d?' · '+esc(x.d):'')+'</small></div>'+
+      '<div style="text-align:right"><div class="amt '+(out?'out':x.t==='fiado'?'':'in')+'">'+(out?'−':x.t==='fiado'?'':'+')+kz(x.v)+'</div>'+
+      '<button class="link" data-del="'+x.id+'">Apagar</button></div></div>';
+  }).join(''):'<div class="empty">Ainda não há registos. Guarde a primeira venda do dia.</div>';
+  document.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){
+    S=S.filter(function(x){return String(x.id)!==b.dataset.del});save();render()}});
+
+  /* dívidas */
+  var D=debts();
+  $('debts').innerHTML=D.length?D.map(function(d,i){
+    return '<div class="row" style="display:block"><div style="display:flex;justify-content:space-between"><div><b>'+esc(d.n)+'</b><small>Último movimento: '+dt(d.last)+'</small></div><div class="amt out">'+kz(d.b)+'</div></div>'+
+      '<div class="inline"><input inputmode="numeric" placeholder="Valor recebido" aria-label="Valor recebido de '+esc(d.n)+'" data-i="'+i+'"><button class="btn sm" data-r="'+i+'">Receber</button></div></div>';
+  }).join(''):'<div class="empty">Sem dívidas por receber. As vendas a crédito aparecem aqui.</div>';
+  document.querySelectorAll('[data-r]').forEach(function(b){b.onclick=function(){
+    var d=D[+b.dataset.r],inp=document.querySelector('[data-i="'+b.dataset.r+'"]');
+    var v=parseInt((inp.value||'').replace(/\D/g,''),10);
+    if(!v){v=d.b}
+    v=Math.min(v,d.b);
+    S.push({id:Date.now()+Math.random(),t:'recebimento',v:v,d:'',c:d.n,ts:Date.now()});
+    save();toast('Recebido: '+kz(v));render()}});
+
+  /* resumo */
+  var w=S.filter(function(x){return x.ts>=Date.now()-7*DAY});
+  var ent=sum(w,function(x){return x.t==='venda'||x.t==='recebimento'}),sai=sum(w,function(x){return x.t==='despesa'});
+  var aRec=D.reduce(function(s,d){return s+d.b},0);
+  $('stats').innerHTML=[['Entradas (7 dias)',kz(ent)],['Saídas (7 dias)',kz(sai)],['Saldo (7 dias)',kz(ent-sai)],['A receber',kz(aRec)]]
+    .map(function(p){return '<div class="stat"><span>'+p[0]+'</span><b>'+p[1]+'</b></div>'}).join('');
+  var p=profile();
+  if(!S.length){
+    $('prof').innerHTML='<div class="empty">O perfil é calculado a partir dos seus registos. Comece por guardar uma venda.</div>';
+  }else{
+    $('prof').innerHTML='<div class="score"><b>'+p.s+'</b><span>de 100 · '+p.lvl+'</span></div><div class="bar"><i style="width:'+p.s+'%"></i></div>'+
+      '<div class="fac"><span>Dias com registo (últimos 30)</span><span>'+p.days+'</span></div>'+
+      '<div class="fac"><span>Total de registos</span><span>'+p.n+'</span></div>'+
+      '<div class="fac"><span>Créditos já cobrados</span><span>'+Math.round(p.ratio*100)+'%</span></div>'+
+      '<div class="fac"><span>Saldo dos últimos 30 dias</span><span>'+(p.saldo>0?'Positivo':'Não positivo')+'</span></div>'+
+      '<button class="btn" id="copy">Copiar resumo para partilhar</button><textarea id="ta" hidden readonly></textarea>';
+    $('copy').onclick=function(){
+      var t='Perfil de actividade (Caderneta Digital)\nPontuação: '+p.s+'/100 ('+p.lvl+')\nDias com registo nos últimos 30: '+p.days+'\nTotal de registos: '+p.n+
+        '\nEntradas dos últimos 7 dias: '+kz(ent)+'\nSaídas dos últimos 7 dias: '+kz(sai)+'\nCréditos cobrados: '+Math.round(p.ratio*100)+'%';
+      var ta=$('ta');ta.value=t;
+      try{navigator.clipboard.writeText(t).then(function(){toast('Resumo copiado')},function(){ta.hidden=false;ta.select()})}
+      catch(e){ta.hidden=false;ta.select()}
+    };
+  }
+}
+
+/* apagar tudo (dois toques) */
+$('wipe').onclick=function(){
+  if(!confirmWipe){confirmWipe=true;$('wipe').textContent='Toque outra vez para confirmar';setTimeout(function(){confirmWipe=false;$('wipe').textContent='Apagar todos os dados'},4000);return}
+  S=[];save();confirmWipe=false;$('wipe').textContent='Apagar todos os dados';toast('Dados apagados');render();
+};
+
+/* estado da ligação */
+function net(){var o=navigator.onLine;$('net').textContent=o?'Ligado':'Sem internet · a funcionar';$('net').className='pill'+(o?'':' off')}
+window.addEventListener('online',net);window.addEventListener('offline',net);net();
+render();
+})();
+</script>
+</body>
+</html>
